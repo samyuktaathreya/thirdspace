@@ -1,0 +1,105 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": 1, "name": "Downtown SF" },
+      "geometry": { "type": "Point", "coordinates": [-122.4194, 37.7749] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 2, "name": "Golden Gate Park" },
+      "geometry": { "type": "Point", "coordinates": [-122.4862, 37.7694] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 3, "name": "Mission District" },
+      "geometry": { "type": "Point", "coordinates": [-122.4192, 37.7599] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 4, "name": "Daly City" },
+      "geometry": { "type": "Point", "coordinates": [-122.4702, 37.6879] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 5, "name": "SFO Airport" },
+      "geometry": { "type": "Point", "coordinates": [-122.3899, 37.6213] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 6, "name": "San Mateo" },
+      "geometry": { "type": "Point", "coordinates": [-122.3255, 37.5630] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 7, "name": "Redwood City" },
+      "geometry": { "type": "Point", "coordinates": [-122.2364, 37.4852] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 8, "name": "Palo Alto" },
+      "geometry": { "type": "Point", "coordinates": [-122.1430, 37.4419] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 9, "name": "Mountain View" },
+      "geometry": { "type": "Point", "coordinates": [-122.0839, 37.3861] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 10, "name": "Sunnyvale" },
+      "geometry": { "type": "Point", "coordinates": [-122.0363, 37.3688] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 11, "name": "San Jose" },
+      "geometry": { "type": "Point", "coordinates": [-121.8863, 37.3382] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 12, "name": "Oakland" },
+      "geometry": { "type": "Point", "coordinates": [-122.2711, 37.8044] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 13, "name": "Berkeley" },
+      "geometry": { "type": "Point", "coordinates": [-122.2730, 37.8715] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 14, "name": "Emeryville" },
+      "geometry": { "type": "Point", "coordinates": [-122.2920, 37.8313] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 15, "name": "Alameda" },
+      "geometry": { "type": "Point", "coordinates": [-122.2426, 37.7652] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 16, "name": "Richmond" },
+      "geometry": { "type": "Point", "coordinates": [-122.3477, 37.9358] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 17, "name": "San Rafael" },
+      "geometry": { "type": "Point", "coordinates": [-122.5311, 37.9735] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 18, "name": "Sausalito" },
+      "geometry": { "type": "Point", "coordinates": [-122.4853, 37.8591] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 19, "name": "Walnut Creek" },
+      "geometry": { "type": "Point", "coordinates": [-122.0652, 37.9101] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 20, "name": "Concord" },
+      "geometry": { "type": "Point", "coordinates": [-122.0311, 37.9779] }
+    }
+  ]
+}
