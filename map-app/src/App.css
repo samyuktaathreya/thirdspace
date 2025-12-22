@@ -1,42 +1,73 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* full screen app layout */
+.app {
+  display: flex;
+  height: 100vh;          /* fill the screen */
+  width: 100vw;
+  overflow: hidden;       /* prevents double scrollbars */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* left panel */
+.sidebar {
+  width: 360px;           /* adjust to taste (320–420px typical) */
+  background: #f5efec;    /* light warm tone like your screenshot */
+  border-right: 1px solid rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* top section stays fixed */
+.sidebarHeader {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* scrollable list area */
+.cards {
+  padding: 0 20px 20px;
+  overflow-y: auto;       /* sidebar scroll */
+  flex: 1;                /* take remaining sidebar height */
+}
+
+/* right side map fills leftover space */
+.mapArea {
+  flex: 1;
+  min-width: 0;           /* IMPORTANT in flex layouts */
+  min-height: 0;          /* IMPORTANT if you nest more flex later */
+  position: relative;
+}
+
+/* make your map div fill mapArea */
+.mapArea .mapContainer {
+  position: absolute;
+  inset: 0;               /* top/right/bottom/left: 0 */
+}
+
+/* basic UI styling */
+.search {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.1);
+  outline: none;
+}
+
+.primaryBtn {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 999px;
+  border: none;
+  background: #9b7a73;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
 }
