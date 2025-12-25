@@ -71,3 +71,78 @@
   margin-top: 16px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.06);
 }
+
+/* ============================= */
+/* Add New Place form (sidebar) */
+/* ============================= */
+
+.formWrap {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;       /* scroll form if tall */
+  flex: 1;                /* fill sidebar */
+}
+
+/* header row */
+.formHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.formTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0.6;
+}
+.iconBtn:hover {
+  opacity: 1;
+}
+
+.formSubtle {
+  font-size: 13px;
+  color: rgba(0,0,0,0.55);
+  margin-top: -6px;
+}
+
+/* labels + inputs */
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(0,0,0,0.7);
+}
+
+.required {
+  color: #d14343;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: white;
+  outline: none;
+  color: black;
+}
+
+.textarea {
+  resize: vertical;
+}
+
+.addPlaceForm {
+  color: black;
+}
+
