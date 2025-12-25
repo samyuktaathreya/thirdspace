@@ -84,9 +84,10 @@ export default function Map({ pins = [] }) {
         type: "geojson",
         data: pinsToGeoJSON(pins),
       });
+      console.log("initial features:", pinsToGeoJSON(pins).features.length);
 
       map.loadImage("/cafe_pin.png", (error, image) => {
-        if (error) throw error;
+        if (error) { console.error(error); return; }
         if (!map.hasImage("cafe-pin")) map.addImage("cafe-pin", image);
 
         // Single layer that renders all pin features

@@ -55,7 +55,6 @@ export default function Page() {
             onCreated={(createdPin) => {
               console.log("Created pin in parent:", createdPin);
               setIsAdding(false);
-              // later: add to pins state + update map markers
             }}
           />
         )}
