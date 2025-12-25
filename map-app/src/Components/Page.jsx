@@ -6,12 +6,21 @@ import AddPinForm from "./AddPinForm";
 
 export default function Page() {
   const [isAdding, setIsAdding] = useState(false);
+  const [pins, setPins] = useState([])
 
   const endpointUrl =
     "https://supreme-cod-67jqgqvgjvj34qqw-8000.app.github.dev/pins";
 
-  useEffect(() => { //runs once when the Map component is mounted
-    
+  useEffect(() => { //send GET request to "/pins" when page is mounted
+    async function fetchPins() {
+      const res = await fetch(
+        "https://supreme-cod-67jqgqvgjvj34qqw-8000.app.github.dev/pins"
+      );
+      const data = await res.json();
+      setPins(data.pins ?? data);
+    }
+
+    fetchPins();
   }, []);
 
   return (
@@ -53,7 +62,7 @@ export default function Page() {
       </aside>
 
       <main className="mapArea">
-        <Map />
+        <Map pins={pins} />
       </main>
     </div>
   );

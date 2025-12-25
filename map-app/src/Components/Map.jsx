@@ -1,23 +1,73 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "../App.css";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
-export default function Map() {
-  const mapRef = useRef(null);
+function pinsToGeoJSON(pins) {
+  return {
+    type: "FeatureCollection",
+    features: (pins || [])
+      .filter(p => typeof p.longitude === "number" && typeof p.latitude === "number")
+      .map(p => ({
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [p.longitude, p.latitude], // IMPORTANT: [lng, lat]
+        },
+        properties: {
+          id: p.id,
+          type: p.type,
+          notes: p.notes ?? "",
+          rating: p.rating ?? null,
+        },
+      })),
+  };
+}
 
-  useEffect(() => { //runs once when the Map component is mounted
+// Expect `pins` from parent: <Map pins={pins} />
+export default function Map({ pins = [] }) {
+  const mapContainerRef = useRef(null);
+  const mapRef = useRef(null); // store the map instance
+  const loadedRef = useRef(false);
+  const mapInstanceRef = useRef(null);   // holds the actual mapbox map object
 
-    //create map object
+  // Convert pins -> GeoJSON (in-memory object, not a file)
+  const pinsGeoJson = useMemo(() => {
+    return {
+      type: "FeatureCollection",
+      features: (pins || [])
+        .filter((p) => typeof p.longitude === "number" && typeof p.latitude === "number")
+        .map((p) => ({
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [p.longitude, p.latitude], // [lng, lat]
+          },
+          properties: {
+            id: p.id,
+            type: p.type,
+            notes: p.notes ?? "",
+            rating: p.rating ?? null,
+          },
+        })),
+    };
+  }, [pins]);
+
+  // 1) Create the map ONCE
+  useEffect(() => {
+    if (mapRef.current) return;
+
     const map = new mapboxgl.Map({
-      container: mapRef.current,
+      container: mapContainerRef.current,
       center: [-122.4194, 37.7749],
       zoom: 9,
       style: "mapbox://styles/queenelizabeth1/cmjf5sekx003301sp9fnp10lj",
     });
+    mapInstanceRef.current = map;
 
-    //create geolocation object to automatically center map on user's location
+    mapRef.current = map;
+
     const geolocate = new mapboxgl.GeolocateControl({
       positionOptions: { enableHighAccuracy: true },
       trackUserLocation: true,
@@ -26,41 +76,50 @@ export default function Map() {
 
     map.addControl(geolocate);
 
-    // Optional: automatically center once on load
     map.on("load", () => {
+      loadedRef.current = true;
 
-      //add a source
-      map.addSource("test-marker", {
+      // Add source backed by React-driven GeoJSON
+      map.addSource("pins", {
         type: "geojson",
-        data: "/bay-area-points.geojson"
+        data: pinsToGeoJSON(pins),
       });
 
-      map.loadImage('/cafe_pin.png', (error, image) => {
-          if (error) throw error;
-          
-          // Add the image to the map style
-          map.addImage('cafe-pin', image);
+      map.loadImage("/cafe_pin.png", (error, image) => {
+        if (error) throw error;
+        if (!map.hasImage("cafe-pin")) map.addImage("cafe-pin", image);
 
-          // Add a layer to use the image
+        // Single layer that renders all pin features
+        if (!map.getLayer("pins-layer")) {
           map.addLayer({
-              'id': 'points',
-              'type': 'symbol',
-              'source': 'test-marker', // GeoJSON source
-              'layout': {
-                  'icon-image': 'cafe-pin',
-                  'icon-size': 0.025
-              }
+            id: "pins-layer",
+            type: "symbol",
+            source: "pins",
+            layout: {
+              "icon-image": "cafe-pin",
+              "icon-size": 0.025,
+            },
           });
+        }
       });
 
       geolocate.trigger();
-
     });
 
     return () => map.remove();
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <div ref={mapRef} className="mapContainer" />;
+  // 2) Whenever pins change, update the existing source data
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !loadedRef.current) return;
 
+    const src = map.getSource("pins");
+    if (src) {
+      src.setData(pinsGeoJson);
+    }
+  }, [pinsGeoJson]);
+
+  return <div ref={mapContainerRef} className="mapContainer" />;
 }
