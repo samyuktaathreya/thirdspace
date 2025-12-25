@@ -1,47 +1,27 @@
-import { useState } from 'react'
-import '../App.css'
-import Map from './Map'
-import LocationSearch from './LocationSearch'
+// Page.jsx
+import { useState, useEffect } from "react";
+import "../App.css";
+import Map from "./Map";
+import AddPinForm from "./AddPinForm";
 
 export default function Page() {
-  const [isAdding, setIsAdding] = useState(false)
-  const [selectedLocation, setSelectedLocation] = useState(null)
-  const [type, setType] = useState("");
-  const [notes, setNotes] = useState("");
-  const [rating, setRating] = useState("");
+  const [isAdding, setIsAdding] = useState(false);
+  const [pins, setPins] = useState([])
 
-  async function handleSubmit (e) {
-    e.preventDefault()
+  const endpointUrl =
+    "https://supreme-cod-67jqgqvgjvj34qqw-8000.app.github.dev/pins";
 
-    if (!selectedLocation) {
-      alert("Pick a location first");
-      return;
+  useEffect(() => { //send GET request to "/pins" when page is mounted
+    async function fetchPins() {
+      const res = await fetch(
+        "https://supreme-cod-67jqgqvgjvj34qqw-8000.app.github.dev/pins"
+      );
+      const data = await res.json();
+      setPins(data.pins ?? data);
     }
 
-    // For now: just confirm you have the coords for backend testing
-    console.log("Selected location:", selectedLocation)
-
-    const payload = {
-      latitude: selectedLocation?.lat ?? null,
-      longitude: selectedLocation?.lng ?? null,
-      type: type,
-      notes: notes,
-      rating: rating === "" ? null : Number(rating)
-    }
-
-    console.log("Sending:", payload);
-
-    const res = await fetch("https://supreme-cod-67jqgqvgjvj34qqw-8000.app.github.dev/pins", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await res.json();
-    console.log("Response:", data);
-  }
+    fetchPins();
+  }, []);
 
   return (
     <div className="app">
@@ -49,93 +29,40 @@ export default function Page() {
         <div className="sidebarHeader">
           <h1>Third Space</h1>
 
-          {!isAdding && (
+          {!isAdding ? (
             <>
               <input className="search" placeholder="Search places..." />
-              <button
-                className="primaryBtn"
-                onClick={() => setIsAdding(true)}
-              >
+              <button className="primaryBtn" onClick={() => setIsAdding(true)}>
                 + Add New Place
               </button>
             </>
-          )}
-
-          {isAdding && (
-            <button
-              className="primaryBtn"
-              onClick={() => setIsAdding(false)}
-            >
+          ) : (
+            <button className="primaryBtn" onClick={() => setIsAdding(false)}>
               ← Back
             </button>
           )}
         </div>
 
-        {!isAdding && (
+        {!isAdding ? (
           <div className="cards">
             <div className="card">Card 1…</div>
             <div className="card">Card 2…</div>
             <div className="card">Card 3…</div>
           </div>
-        )}
-
-        {isAdding && (
-          <form className="addPlaceForm" onSubmit={handleSubmit}>
-            {/* 1. Search for a location */}
-            <div>
-              <label>Location</label>
-              <LocationSearch onSelect={setSelectedLocation} />
-              <div style={{ fontSize: 12 }}>
-                {selectedLocation
-                  ? `Selected: ${selectedLocation.name} (${selectedLocation.lat}, ${selectedLocation.lng})`
-                  : "No location selected yet"}
-              </div>
-            </div>
-
-            {/* 2. Type */}
-            <div>
-              <label>Type</label>
-              <select name="type" value={type} onChange={(e) => setType(e.target.value)}>
-                <option value="">Select type</option>
-                <option value="cafe">Cafe</option>
-                <option value="library">Library</option>
-                <option value="college">College</option>
-              </select>
-            </div>
-
-            {/* 3. Notes */}
-            <div>
-              <label>Notes</label>
-              <textarea
-                name="notes"
-                placeholder="Description / caption"
-                rows={4}
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-              />
-            </div>
-
-            {/* 4. Rating */}
-            <div>
-              <label>Rating</label>
-              <input
-                type="number"
-                name="rating"
-                min="0"
-                max="5"
-                value={rating}
-                onChange={(e) => setRating(e.target.value)}
-              />
-            </div>
-
-            <button type="submit">Save Place</button>
-          </form>
+        ) : (
+          <AddPinForm
+            endpointUrl={endpointUrl}
+            onCreated={(createdPin) => {
+              console.log("Created pin in parent:", createdPin);
+              setIsAdding(false);
+            }}
+          />
         )}
       </aside>
 
       <main className="mapArea">
-        <Map />
+        <Map pins={pins} />
       </main>
     </div>
-  )
+  );
 }
