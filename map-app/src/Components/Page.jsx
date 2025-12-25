@@ -6,20 +6,41 @@ import LocationSearch from './LocationSearch'
 export default function Page() {
   const [isAdding, setIsAdding] = useState(false)
   const [selectedLocation, setSelectedLocation] = useState(null)
+  const [type, setType] = useState("");
+  const [notes, setNotes] = useState("");
+  const [rating, setRating] = useState("");
 
-  const handleSubmit = (e) => {
+  async function handleSubmit (e) {
     e.preventDefault()
+
+    if (!selectedLocation) {
+      alert("Pick a location first");
+      return;
+    }
 
     // For now: just confirm you have the coords for backend testing
     console.log("Selected location:", selectedLocation)
 
-    // Example backend payload shape:
-    // const payload = {
-    //   locationName: selectedLocation?.name ?? null,
-    //   longitude: selectedLocation?.lng ?? null,
-    //   latitude: selectedLocation?.lat ?? null,
-    //   ...
-    // }
+    const payload = {
+      latitude: selectedLocation?.lat ?? null,
+      longitude: selectedLocation?.lng ?? null,
+      type: type,
+      notes: notes,
+      rating: rating === "" ? null : Number(rating)
+    }
+
+    console.log("Sending:", payload);
+
+    const res = await fetch("https://supreme-cod-67jqgqvgjvj34qqw-8000.app.github.dev/pins", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+    console.log("Response:", data);
   }
 
   return (
@@ -74,7 +95,7 @@ export default function Page() {
             {/* 2. Type */}
             <div>
               <label>Type</label>
-              <select name="type">
+              <select name="type" value={type} onChange={(e) => setType(e.target.value)}>
                 <option value="">Select type</option>
                 <option value="cafe">Cafe</option>
                 <option value="library">Library</option>
@@ -89,6 +110,8 @@ export default function Page() {
                 name="notes"
                 placeholder="Description / caption"
                 rows={4}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
               />
             </div>
 
@@ -99,7 +122,9 @@ export default function Page() {
                 type="number"
                 name="rating"
                 min="0"
-                max="10"
+                max="5"
+                value={rating}
+                onChange={(e) => setRating(e.target.value)}
               />
             </div>
 
