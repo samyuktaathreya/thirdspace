@@ -1,13 +1,20 @@
-import './App.css'
-import Page from './Components/Page'
+import "./App.css";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-function App() {
+import AppLayout from "./layouts/AppLayout";
+import SidebarHome from "./pages/SidebarHome";
+import SidebarAdd from "./pages/SidebarAdd";
+
+export default function App() {
   return (
-    <>
-      <Page />
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<SidebarHome />} />
+          <Route path="/add" element={<SidebarAdd />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
-export default App
