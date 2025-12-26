@@ -11,15 +11,22 @@ export default function Page() {
   const endpointUrl =
     "https://supreme-cod-67jqgqvgjvj34qqw-8000.app.github.dev/pins";
 
-  useEffect(() => { //send GET request to "/pins" when page is mounted
-    async function fetchPins() {
-      const res = await fetch(
-        "https://supreme-cod-67jqgqvgjvj34qqw-8000.app.github.dev/pins"
-      );
+  async function fetchPins() {
+    try {
+      const res = await fetch(endpointUrl);
+      if (!res.ok) throw new Error(`GET /pins failed: ${res.status}`);
       const data = await res.json();
-      setPins(data.pins ?? data);
+      setPins((data.pins ?? data).map(p => ({
+        ...p,
+        longitude: typeof p.longitude === "string" ? parseFloat(p.longitude) : p.longitude,
+        latitude: typeof p.latitude === "string" ? parseFloat(p.latitude) : p.latitude,
+      })));
+    } catch (err) {
+      console.error(err);
     }
+  }
 
+  useEffect(() => { //send GET request to "/pins" when page is mounted
     fetchPins();
   }, []);
 
@@ -52,9 +59,9 @@ export default function Page() {
         ) : (
           <AddPinForm
             endpointUrl={endpointUrl}
-            onCreated={(createdPin) => {
-              console.log("Created pin in parent:", createdPin);
+            onCreated={() => {
               setIsAdding(false);
+              fetchPins();
             }}
           />
         )}

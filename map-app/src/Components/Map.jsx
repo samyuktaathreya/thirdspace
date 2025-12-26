@@ -5,6 +5,7 @@ import "../App.css";
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 function pinsToGeoJSON(pins) {
+  console.log(pins);
   return {
     type: "FeatureCollection",
     features: (pins || [])
