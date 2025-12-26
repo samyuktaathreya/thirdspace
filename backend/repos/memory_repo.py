@@ -1,34 +1,40 @@
 from uuid import uuid4
 from schemas import PinOut, PinsResponse
 
-#fake markers for testing
+# fake markers for testing
 pins: list[PinOut] = [
     PinOut(
         id=str(uuid4()),
+        name="Blue Bottle Coffee",
         latitude=37.7749,
         longitude=-122.4194,
         type="cafe",
         notes="Nice coffee and WiFi",
         rating=4,
         owner_id=None,
+        photo_url=None,
     ),
     PinOut(
         id=str(uuid4()),
+        name="SF Public Library",
         latitude=37.7793,
         longitude=-122.4192,
         type="library",
         notes="Quiet place to study",
         rating=5,
         owner_id=None,
+        photo_url=None,
     ),
     PinOut(
         id=str(uuid4()),
+        name="City College Campus",
         latitude=37.7715,
         longitude=-122.4148,
         type="college",
         notes="Campus vibes",
         rating=3,
         owner_id=None,
+        photo_url=None,
     ),
 ]
 

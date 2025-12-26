@@ -38,6 +38,15 @@
   position: relative;
 }
 
+.mapboxgl-popup-content {
+  color: #000;            /* black text */
+}
+
+.mapboxgl-popup-content * {
+  color: #000;            /* ensure all inner text is black */
+}
+
+
 /* make your map div fill mapArea */
 .mapArea .mapContainer {
   position: absolute;
@@ -70,6 +79,7 @@
   padding: 16px;
   margin-top: 16px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  color: black;
 }
 
 /* ============================= */

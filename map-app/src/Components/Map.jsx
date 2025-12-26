@@ -4,27 +4,6 @@ import "../App.css";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
-function pinsToGeoJSON(pins) {
-  console.log(pins);
-  return {
-    type: "FeatureCollection",
-    features: (pins || [])
-      .filter(p => typeof p.longitude === "number" && typeof p.latitude === "number")
-      .map(p => ({
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [p.longitude, p.latitude], // IMPORTANT: [lng, lat]
-        },
-        properties: {
-          id: p.id,
-          type: p.type,
-          notes: p.notes ?? "",
-          rating: p.rating ?? null,
-        },
-      })),
-  };
-}
 
 // Expect `pins` from parent: <Map pins={pins} />
 export default function Map({ pins = [] }) {
@@ -38,7 +17,9 @@ export default function Map({ pins = [] }) {
     return {
       type: "FeatureCollection",
       features: (pins || [])
-        .filter((p) => typeof p.longitude === "number" && typeof p.latitude === "number")
+        .filter(
+          (p) => Number.isFinite(p.longitude) && Number.isFinite(p.latitude)
+        )
         .map((p) => ({
           type: "Feature",
           geometry: {
@@ -47,6 +28,7 @@ export default function Map({ pins = [] }) {
           },
           properties: {
             id: p.id,
+            name: p.name,
             type: p.type,
             notes: p.notes ?? "",
             rating: p.rating ?? null,
@@ -83,9 +65,9 @@ export default function Map({ pins = [] }) {
       // Add source backed by React-driven GeoJSON
       map.addSource("pins", {
         type: "geojson",
-        data: pinsToGeoJSON(pins),
+        data: pinsGeoJson,
       });
-      console.log("initial features:", pinsToGeoJSON(pins).features.length);
+      console.log("initial features:", pinsGeoJson.features.length);
 
       map.loadImage("/cafe_pin.png", (error, image) => {
         if (error) { console.error(error); return; }
@@ -103,6 +85,38 @@ export default function Map({ pins = [] }) {
             },
           });
         }
+      });
+
+      map.on("mouseenter", "pins-layer", () => {
+        map.getCanvas().style.cursor = "pointer";
+      });
+      map.on("mouseleave", "pins-layer", () => {
+        map.getCanvas().style.cursor = "";
+      });
+
+      map.on("click", "pins-layer", (e) => {
+        const feature = e.features?.[0];
+        if (!feature) return;
+
+        const coords = feature.geometry.coordinates.slice();
+        const {name, type, notes, rating } = feature.properties || {};
+
+        map.easeTo({
+          center: coords,
+          duration: 500,
+        });
+
+        new mapboxgl.Popup({ offset: 12 })
+          .setLngLat(coords)
+          .setHTML(`
+          <div style="min-width: 180px">
+            <div><b>${name ?? "Place"}</b></div>
+            ${type ? `<div>Type: ${type}</div>` : ""}
+            ${rating ? `<div>Rating: ${rating}</div>` : ""}
+            ${notes ? `<div style="margin-top:6px">${notes}</div>` : ""}
+          </div>
+        `)
+          .addTo(map);
       });
 
       geolocate.trigger();
