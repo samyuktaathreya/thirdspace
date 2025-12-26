@@ -3,10 +3,14 @@ import { useState, useEffect } from "react";
 import "../App.css";
 import Map from "./Map";
 import AddPinForm from "./AddPinForm";
+import ListOfCards from "./ListOfCards";
+import SearchCards from './SearchCards';
 
 export default function Page() {
   const [isAdding, setIsAdding] = useState(false);
-  const [pins, setPins] = useState([])
+  const [pins, setPins] = useState([]);
+  const [filteredPins, setFilteredPins] = useState([]);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const endpointUrl =
     "https://supreme-cod-67jqgqvgjvj34qqw-8000.app.github.dev/pins";
@@ -16,17 +20,24 @@ export default function Page() {
       const res = await fetch(endpointUrl);
       if (!res.ok) throw new Error(`GET /pins failed: ${res.status}`);
       const data = await res.json();
-      setPins((data.pins ?? data).map(p => ({
+
+      const normalized = (data.pins ?? data).map((p) => ({
         ...p,
         longitude: typeof p.longitude === "string" ? parseFloat(p.longitude) : p.longitude,
         latitude: typeof p.latitude === "string" ? parseFloat(p.latitude) : p.latitude,
-      })));
+      }));
+
+      console.log("first pin", normalized[0]);
+      console.log("types", typeof normalized[0]?.longitude, typeof normalized[0]?.latitude);
+
+      setPins(normalized);
+      setFilteredPins(normalized);
     } catch (err) {
       console.error(err);
     }
   }
 
-  useEffect(() => { //send GET request to "/pins" when page is mounted
+  useEffect(() => {
     fetchPins();
   }, []);
 
@@ -37,12 +48,11 @@ export default function Page() {
           <h1>Third Space</h1>
 
           {!isAdding ? (
-            <>
-              <input className="search" placeholder="Search places..." />
-              <button className="primaryBtn" onClick={() => setIsAdding(true)}>
-                + Add New Place
-              </button>
-            </>
+            <SearchCards
+              pins={pins}
+              onResults={setFilteredPins}
+              onSearch={setHasSearched}
+            />
           ) : (
             <button className="primaryBtn" onClick={() => setIsAdding(false)}>
               ← Back
@@ -51,11 +61,11 @@ export default function Page() {
         </div>
 
         {!isAdding ? (
-          <div className="cards">
-            <div className="card">Card 1…</div>
-            <div className="card">Card 2…</div>
-            <div className="card">Card 3…</div>
-          </div>
+          hasSearched && filteredPins.length === 0 ? (
+            <div className="emptyState">No places found.</div>
+          ) : (
+            <ListOfCards pins={hasSearched ? filteredPins : pins} />
+          )
         ) : (
           <AddPinForm
             endpointUrl={endpointUrl}

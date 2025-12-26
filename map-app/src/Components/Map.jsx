@@ -17,7 +17,9 @@ export default function Map({ pins = [] }) {
     return {
       type: "FeatureCollection",
       features: (pins || [])
-        .filter((p) => typeof p.longitude === "number" && typeof p.latitude === "number")
+        .filter(
+          (p) => Number.isFinite(p.longitude) && Number.isFinite(p.latitude)
+        )
         .map((p) => ({
           type: "Feature",
           geometry: {
