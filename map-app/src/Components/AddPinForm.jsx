@@ -1,4 +1,3 @@
-// AddPinForm.jsx
 import { useState } from "react";
 import LocationSearch from "./LocationSearch";
 
@@ -7,6 +6,8 @@ export default function AddPinForm({ onCreated, endpointUrl }) {
   const [type, setType] = useState("");
   const [notes, setNotes] = useState("");
   const [rating, setRating] = useState("");
+  const [name, setName] = useState("");
+  const [photo, setPhoto] = useState(null);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -16,28 +17,28 @@ export default function AddPinForm({ onCreated, endpointUrl }) {
       return;
     }
 
-    const payload = {
-      latitude: selectedLocation.lat,
-      longitude: selectedLocation.lng,
-      type,
-      notes,
-      rating: rating === "" ? null : Number(rating),
-    };
+    const formData = new FormData();
 
-    console.log("Sending:", payload);
+    formData.append("latitude", selectedLocation.lat);
+    formData.append("longitude", selectedLocation.lng);
+    formData.append("name", name);
+    formData.append("type", type);
+    formData.append("notes", notes);
+    formData.append("rating", rating === "" ? "" : Number(rating));
+
+    if (photo) {
+      formData.append("photo", photo);
+    }
 
     const res = await fetch(endpointUrl, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: formData,
     });
 
     const data = await res.json();
-    console.log("Response:", data);
-
-    // Let the parent decide what to do (close form, add marker, etc.)
     onCreated?.(data);
   }
+
 
   return (
     <form className="addPlaceForm" onSubmit={handleSubmit}>
@@ -49,6 +50,17 @@ export default function AddPinForm({ onCreated, endpointUrl }) {
             ? `Selected: ${selectedLocation.name} (${selectedLocation.lat}, ${selectedLocation.lng})`
             : "No location selected yet"}
         </div>
+      </div>
+
+      <div>
+        <label>Name</label>
+        <input
+          type="string"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder='eg: Cute Coffee Shop'
+        >
+        </input>
       </div>
 
       <div>
@@ -80,6 +92,20 @@ export default function AddPinForm({ onCreated, endpointUrl }) {
           value={rating}
           onChange={(e) => setRating(e.target.value)}
         />
+      </div>
+
+      <div>
+        <label>Photo</label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setPhoto(e.target.files[0] ?? null)}
+        />
+        {photo && (
+          <div style={{ fontSize: 12 }}>
+            Selected: {photo.name}
+          </div>
+        )}
       </div>
 
       <button type="submit">Save Place</button>

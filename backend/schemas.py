@@ -1,10 +1,10 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional, Literal
-from uuid import uuid4
 
 PinType = Literal["cafe", "library", "college"]
 
 class PinCreate(BaseModel):
+    name: str
     latitude: float = Field(ge=-90, le=90)
     longitude: float = Field(ge=-180, le=180)
     type: PinType
@@ -14,6 +14,7 @@ class PinCreate(BaseModel):
 class PinOut(PinCreate):
     id: str
     owner_id: Optional[str] = None
+    photo_url: Optional[str] = None
 
 class PinsResponse(BaseModel):
     pins: List[PinOut]
