@@ -6,7 +6,7 @@ mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 
 // Expect `pins` from parent: <Map pins={pins} />
-export default function Map({ pins = [] }) {
+export default function MapView({ pins = [] }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null); // store the map instance
   const loadedRef = useRef(false);
