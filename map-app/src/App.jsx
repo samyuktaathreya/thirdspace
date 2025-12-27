@@ -3,9 +3,9 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import AppLayout from "./layouts/AppLayout";
-import SidebarHome from "./pages/SidebarHome";
-import SidebarAdd from "./pages/SidebarAdd";
-import GalleryPage from "./Components/GalleryPage";
+import SidebarHome from "./sidebar/SidebarHome";
+import SidebarAdd from "./sidebar/SidebarAdd";
+import Gallery from "./layouts/GalleryLayout";
 
 export default function App() {
   return (
@@ -18,7 +18,7 @@ export default function App() {
         </Route>
 
         {/* route that should be its OWN page */}
-        <Route path="/gallery" element={<GalleryPage />} />
+        <Route path="/gallery" element={<Gallery />} />
       </Routes>
     </BrowserRouter>
   );

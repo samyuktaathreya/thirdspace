@@ -36,7 +36,7 @@ export default function SidebarHome() {
       {hasSearched && shownPins.length === 0 ? (
         <div className="emptyState">No places found.</div>
       ) : (
-        <ListOfCards pins={pins} onSelectPin={onSelectPin} />
+        <ListOfCards pins={shownPins} onSelectPin={onSelectPin} />
       )}
     </>
   );
