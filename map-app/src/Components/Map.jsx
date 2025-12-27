@@ -1,41 +1,61 @@
 import { useEffect, useMemo, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "../App.css";
+import { focusFeature } from "../helpers/mapFocus";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 
 // Expect `pins` from parent: <Map pins={pins} />
-export default function MapView({ pins = [] }) {
+export default function MapView({ pins = [], selectedPin }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null); // store the map instance
   const loadedRef = useRef(false);
   const mapInstanceRef = useRef(null);   // holds the actual mapbox map object
 
   // Convert pins -> GeoJSON (in-memory object, not a file)
-  const pinsGeoJson = useMemo(() => {
-    return {
-      type: "FeatureCollection",
-      features: (pins || [])
-        .filter(
-          (p) => Number.isFinite(p.longitude) && Number.isFinite(p.latitude)
-        )
-        .map((p) => ({
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [p.longitude, p.latitude], // [lng, lat]
-          },
-          properties: {
-            id: p.id,
-            name: p.name,
-            type: p.type,
-            notes: p.notes ?? "",
-            rating: p.rating ?? null,
-          },
-        })),
+  const pinsGeoJson = useMemo(() => ({
+    type: "FeatureCollection",
+    features: (pins || [])
+      .filter(p => Number.isFinite(p.longitude) && Number.isFinite(p.latitude))
+      .map(p => ({
+        type: "Feature",
+        geometry: { type: "Point", coordinates: [p.longitude, p.latitude] },
+        properties: {
+          id: p.id,
+          name: p.name,
+          type: p.type,
+          notes: p.notes,
+          rating: p.rating,
+        },
+      })),
+  }), [pins]);
+
+  const pinsGeoJsonRef = useRef({ type: "FeatureCollection", features: [] });
+
+  useEffect(() => {
+    pinsGeoJsonRef.current = pinsGeoJson;
+
+    const map = mapRef.current;
+    if (!map || !loadedRef.current) return;
+
+    const src = map.getSource("pins");
+    if (src) src.setData(pinsGeoJsonRef.current);
+  }, [pinsGeoJson]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !selectedPin) return;
+
+    const featureLike = {
+      geometry: {
+        coordinates: [selectedPin.longitude, selectedPin.latitude],
+      },
+      properties: selectedPin,
     };
-  }, [pins]);
+
+    focusFeature(map, featureLike);
+  }, [selectedPin]);
 
   // 1) Create the map ONCE
   useEffect(() => {
@@ -60,20 +80,18 @@ export default function MapView({ pins = [] }) {
     map.addControl(geolocate);
 
     map.on("load", () => {
+      console.log(pinsGeoJsonRef.current.features.length); 
       loadedRef.current = true;
 
-      // Add source backed by React-driven GeoJSON
-      map.addSource("pins", {
-        type: "geojson",
-        data: pinsGeoJson,
-      });
-      console.log("initial features:", pinsGeoJson.features.length);
+      if (!map.getSource("pins")) {
+        map.addSource("pins", { type: "geojson", data: pinsGeoJson });
+      }
 
       map.loadImage("/cafe_pin.png", (error, image) => {
-        if (error) { console.error(error); return; }
+        if (error) { console.error("loadImage failed:", error); return; }
+
         if (!map.hasImage("cafe-pin")) map.addImage("cafe-pin", image);
 
-        // Single layer that renders all pin features
         if (!map.getLayer("pins-layer")) {
           map.addLayer({
             id: "pins-layer",
@@ -84,43 +102,29 @@ export default function MapView({ pins = [] }) {
               "icon-size": 0.025,
             },
           });
+
+          // Register events only after layer exists
+          map.on("mouseenter", "pins-layer", () => {
+            map.getCanvas().style.cursor = "pointer";
+          });
+
+          map.on("mouseleave", "pins-layer", () => {
+            map.getCanvas().style.cursor = "";
+          });
+
+          map.on("click", "pins-layer", (e) => {
+            const feature = e.features?.[0];
+            if (feature) {
+              focusFeature(map, feature);
+            }
+          });
         }
       });
 
-      map.on("mouseenter", "pins-layer", () => {
-        map.getCanvas().style.cursor = "pointer";
-      });
-      map.on("mouseleave", "pins-layer", () => {
-        map.getCanvas().style.cursor = "";
-      });
-
-      map.on("click", "pins-layer", (e) => {
-        const feature = e.features?.[0];
-        if (!feature) return;
-
-        const coords = feature.geometry.coordinates.slice();
-        const {name, type, notes, rating } = feature.properties || {};
-
-        map.easeTo({
-          center: coords,
-          duration: 500,
-        });
-
-        new mapboxgl.Popup({ offset: 12 })
-          .setLngLat(coords)
-          .setHTML(`
-          <div style="min-width: 180px">
-            <div><b>${name ?? "Place"}</b></div>
-            ${type ? `<div>Type: ${type}</div>` : ""}
-            ${rating ? `<div>Rating: ${rating}</div>` : ""}
-            ${notes ? `<div style="margin-top:6px">${notes}</div>` : ""}
-          </div>
-        `)
-          .addTo(map);
-      });
-
       geolocate.trigger();
+      map.getSource("pins")?.setData(pinsGeoJsonRef.current);
     });
+
 
     return () => map.remove();
     // eslint-disable-next-line react-hooks/exhaustive-deps

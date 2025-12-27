@@ -6,7 +6,7 @@ import SearchCards from "../Components/SearchCards";
 
 export default function SidebarHome() {
   const navigate = useNavigate();
-  const { pins } = useOutletContext();
+  const { pins, onSelectPin } = useOutletContext();
 
   const [filteredPins, setFilteredPins] = useState(pins);
   const [hasSearched, setHasSearched] = useState(false);
@@ -36,7 +36,7 @@ export default function SidebarHome() {
       {hasSearched && shownPins.length === 0 ? (
         <div className="emptyState">No places found.</div>
       ) : (
-        <ListOfCards pins={shownPins} />
+        <ListOfCards pins={pins} onSelectPin={onSelectPin} />
       )}
     </>
   );
