@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import "../App.css";
 
 const isGallery = location.pathname === "/gallery";
 
@@ -10,8 +11,12 @@ export default function GalleryPage({ pins = [] }) {
     return (
     <div>
         GALLERY IN PROGRESS
-        <button type="button" onClick={handleToggleView}>
-            {isGallery ? "Map" : "Gallery"}
+        <button
+        type="button"
+        onClick={handleToggleView}
+        className="top-right-toggle"
+        >
+        {isGallery ? "Map" : "Gallery"}
         </button>
     </div>
     );
