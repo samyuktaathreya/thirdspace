@@ -1,8 +1,7 @@
-const endpointUrl =
-"https://supreme-cod-67jqgqvgjvj34qqw-8000.app.github.dev/pins";
-export default async function fetchPins(setPins) {
+
+export default async function fetchPins(endpointUrl, setPins) {
 try {
-    const res = await fetch(endpointUrl);
+    const res = await fetch(`${endpointUrl}/pins`);
     if (!res.ok) throw new Error(`GET /pins failed: ${res.status}`);
     const data = await res.json();
 
@@ -13,6 +12,7 @@ try {
     }));
 
     setPins(normalized);
+    console.log(normalized);
 } catch (err) {
     console.error(err);
 }

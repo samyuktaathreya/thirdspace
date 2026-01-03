@@ -12,10 +12,16 @@ export default function AppLayout() {
   const [selectedPin, setSelectedPin] = useState(null);
 
   const endpointUrl =
-    "https://supreme-cod-67jqgqvgjvj34qqw-8000.app.github.dev/pins";
+    "https://supreme-cod-67jqgqvgjvj34qqw-8000.app.github.dev";
 
   useEffect(() => {
-    fetchPins(setPins);
+    fetchPins(endpointUrl, setPins);
+  }, []);
+
+  const refreshPins = () => fetchPins(endpointUrl, setPins);
+
+  useEffect(() => {
+    refreshPins();
   }, []);
 
   const isGallery = location.pathname === "/gallery";
@@ -27,7 +33,7 @@ export default function AppLayout() {
   return (
     <div className="app">
       <aside className="sidebar">
-        <Outlet context={{ pins, endpointUrl, fetchPins, onSelectPin: setSelectedPin }} />
+        <Outlet context={{ pins, endpointUrl, fetchPins, onSelectPin: setSelectedPin, refreshPins}} />
         <button type="button" onClick={handleToggleView}>
           {isGallery ? "Map" : "Gallery"}
         </button>
