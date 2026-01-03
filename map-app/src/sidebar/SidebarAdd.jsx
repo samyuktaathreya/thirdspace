@@ -3,7 +3,7 @@ import AddPinForm from "../Components/AddPinForm";
 
 export default function SidebarAdd() {
   const navigate = useNavigate();
-  const { endpointUrl, fetchPins } = useOutletContext();
+  const { endpointUrl, fetchPins, refreshPins } = useOutletContext();
 
   return (
     <>
@@ -15,10 +15,10 @@ export default function SidebarAdd() {
       </div>
 
       <AddPinForm
-        endpointUrl={endpointUrl}
+        endpointUrl={`${endpointUrl}/pins`}
         onCreated={async () => {
-          await fetchPins();     // refresh pins so the map updates
-          navigate("/");         // go back to list
+          await refreshPins();
+          navigate("/");
         }}
       />
     </>
