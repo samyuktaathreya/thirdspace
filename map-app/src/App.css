@@ -1,9 +1,17 @@
 /* full screen app layout */
 .app {
   display: flex;
-  height: 100vh;          /* fill the screen */
+  height: 100vh;          /* make app fill the viewport */
   width: 100vw;
   overflow: hidden;       /* prevents double scrollbars */
+}
+
+.appContent {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;      /* critical for scroll to work in children */
+  display: flex;      /* so the page can be flex:1 */
+  overflow: hidden;   /* prevents double scrollbars */
 }
 
 /* left panel */
@@ -36,6 +44,10 @@
   min-width: 0;           /* IMPORTANT in flex layouts */
   min-height: 0;          /* IMPORTANT if you nest more flex later */
   position: relative;
+}
+
+.mapArea {
+  overflow: hidden; /* ensure map itself doesn't get a scrollbar */
 }
 
 .mapboxgl-popup-content {
@@ -155,15 +167,19 @@
 .addPlaceForm {
   color: black;
 }
-
-.galleryMapBtn {
-  position: "fixed";
-  top: "16px";
-  right: "16px";
-  z-index:1000;
+.GalleryTitle {
+  margin: 0 0 16px 0; /* kill default h1 margins */
+  flex: 0 0 auto;
 }
 
-
+.GalleryPage {
+  flex: 1;                /* fill available height inside sidebar */
+  min-height: 0;          /* allow children to scroll correctly */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+  box-sizing: border-box;
+}
 
 .GalleryCards{
   display: flex;
@@ -175,8 +191,22 @@
   background: white;
   border-radius: 16px;
   padding: 16px;
-  margin-top: 16px;
+  margin-top: 0;
   box-shadow: 0 6px 18px rgba(0,0,0,0.06);
   color: black;
   width: 200px;
+}
+.GalleryCardPhoto {
+  width: 200px;
+  height: auto;
+}
+
+.MapGalleryBtn {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+}
+
+.search {
+  width: 30%;
 }
