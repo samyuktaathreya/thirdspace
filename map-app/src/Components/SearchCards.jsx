@@ -25,7 +25,7 @@ export default function SearchCards({ pins = [], onResults, onSearch }) {
   }
 
   return (
-    <input
+    <input 
       className="search"
       placeholder="Search places..."
       value={query}

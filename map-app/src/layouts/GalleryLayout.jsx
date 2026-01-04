@@ -7,6 +7,9 @@ import GalleryCards from "../Components/GalleryCards";
 
 const isGallery = location.pathname === "/gallery";
 
+const endpointUrl =
+"https://supreme-cod-67jqgqvgjvj34qqw-8000.app.github.dev";
+
 export default function Gallery({}) {
     const [pins, setPins] = useState([]);
     const navigate = useNavigate();
@@ -15,17 +18,19 @@ export default function Gallery({}) {
     const shownPins = hasSearched ? filteredPins : pins;
     const [selectedPin, setSelectedPin] = useState(null);
 
+    const refreshPins = () => fetchPins(endpointUrl, setPins);
+
     useEffect(() => {
-    fetchPins(setPins);
+        refreshPins();
     }, []);
 
     function handleToggleView() {
         navigate(isGallery ? "/" : "/gallery");
     }
     return (
-    <div>
+    <div className="GalleryPage">
         <h1 className="GalleryTitle">My Places</h1>
-        <SearchCards
+        <SearchCards 
             pins={pins}
             onResults={setFilteredPins}
             onSearch={setHasSearched}
@@ -40,7 +45,7 @@ export default function Gallery({}) {
         <button
         type="button"
         onClick={handleToggleView}
-        className="top-right-toggle"
+        className="MapGalleryBtn"
         >
         {isGallery ? "Map" : "Gallery"}
         </button>

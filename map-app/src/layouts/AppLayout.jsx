@@ -34,7 +34,7 @@ export default function AppLayout() {
     <div className="app">
       <aside className="sidebar">
         <Outlet context={{ pins, endpointUrl, fetchPins, onSelectPin: setSelectedPin, refreshPins}} />
-        <button type="button" onClick={handleToggleView}>
+        <button className="MapGalleryBtn" type="button" onClick={handleToggleView}>
           {isGallery ? "Map" : "Gallery"}
         </button>
       </aside>

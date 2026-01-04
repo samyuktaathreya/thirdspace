@@ -15,7 +15,7 @@ export default function GalleryCard({pin, onSelectPin}) {
     >
       {imgSrc && (
         <img
-          className="cardPhoto"
+          className="GalleryCardPhoto"
           src={imgSrc}
           alt={pin.name || "Place photo"}
         />
