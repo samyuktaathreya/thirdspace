@@ -32,12 +32,20 @@ jobs:
           cache: 'npm'
           cache-dependency-path: map-app/package-lock.json
 
+      - name: Check env vars present
+        run: |
+          test -n "${{ secrets.VITE_MAPBOX_TOKEN }}"
+          test -n "${{ secrets.VITE_API_URL }}"
+
       - name: Install dependencies
         working-directory: map-app
-        run: npm install
+        run: npm ci
 
       - name: Build React app
         working-directory: map-app
+        env:
+          VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
         run: npm run build
 
       - name: Setup Pages
