@@ -7,8 +7,7 @@ import GalleryCards from "../Components/GalleryCards";
 
 const isGallery = location.pathname === "/gallery";
 
-const endpointUrl =
-"https://supreme-cod-67jqgqvgjvj34qqw-8000.app.github.dev";
+const endpointUrl = import.meta.env.VITE_API_URL;
 
 export default function Gallery({}) {
     const [pins, setPins] = useState([]);

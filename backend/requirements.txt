@@ -3,5 +3,5 @@ uvicorn
 pydantic
 pathlib
 typing
-uiud
+uuid
 os
