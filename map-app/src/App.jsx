@@ -9,7 +9,7 @@ import Gallery from "./layouts/GalleryLayout";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
         {/* routes that SHOULD have sidebar/map layout */}
         <Route element={<AppLayout />}>
