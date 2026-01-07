@@ -22,7 +22,8 @@ export default function LocationSearch({ onSelect }) {
   }, []);
 
   return (
-    <SearchBox
+    <div className="locationSearchWrap">
+      <SearchBox
       accessToken={MAPBOX_TOKEN}
       value={value}
       onChange={(v) => setValue(v)}
@@ -47,6 +48,7 @@ export default function LocationSearch({ onSelect }) {
           feature, // optional for debugging
         });
       }}
-    />
+      />
+    </div>
   );
 }

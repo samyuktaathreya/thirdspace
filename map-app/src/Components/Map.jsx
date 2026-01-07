@@ -87,7 +87,7 @@ export default function MapView({ pins = [], selectedPin }) {
         map.addSource("pins", { type: "geojson", data: pinsGeoJson });
       }
 
-      map.loadImage("/cafe_pin.png", (error, image) => {
+      map.loadImage(`${import.meta.env.BASE_URL}/cafe_pin.png`, (error, image) => {
         if (error) { console.error("loadImage failed:", error); return; }
 
         if (!map.hasImage("cafe-pin")) map.addImage("cafe-pin", image);

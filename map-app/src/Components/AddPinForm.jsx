@@ -43,9 +43,9 @@ export default function AddPinForm({ onCreated, endpointUrl }) {
   return (
     <form className="addPlaceForm" onSubmit={handleSubmit}>
       <div>
-        <label>Location</label>
+        <label className="label">Location</label>
         <LocationSearch onSelect={setSelectedLocation} />
-        <div style={{ fontSize: 12 }}>
+        <div className="formSubtle">
           {selectedLocation
             ? `Selected: ${selectedLocation.name} (${selectedLocation.lat}, ${selectedLocation.lng})`
             : "No location selected yet"}
@@ -53,19 +53,19 @@ export default function AddPinForm({ onCreated, endpointUrl }) {
       </div>
 
       <div>
-        <label>Name</label>
+        <label className="label">Name</label>
         <input
-          type="string"
+          className="input"
+          type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder='eg: Cute Coffee Shop'
-        >
-        </input>
+        />
       </div>
 
       <div>
-        <label>Type</label>
-        <select value={type} onChange={(e) => setType(e.target.value)}>
+        <label className="label">Type</label>
+        <select className="input" value={type} onChange={(e) => setType(e.target.value)}>
           <option value="">Select type</option>
           <option value="cafe">Cafe</option>
           <option value="library">Library</option>
@@ -74,8 +74,9 @@ export default function AddPinForm({ onCreated, endpointUrl }) {
       </div>
 
       <div>
-        <label>Notes</label>
+        <label className="label">Notes</label>
         <textarea
+          className="textarea"
           placeholder="Description / caption"
           rows={4}
           value={notes}
@@ -84,8 +85,9 @@ export default function AddPinForm({ onCreated, endpointUrl }) {
       </div>
 
       <div>
-        <label>Rating</label>
+        <label className="label">Rating</label>
         <input
+          className="input"
           type="number"
           min="0"
           max="5"
@@ -95,20 +97,21 @@ export default function AddPinForm({ onCreated, endpointUrl }) {
       </div>
 
       <div>
-        <label>Photo</label>
+        <label className="label">Photo</label>
         <input
+          className="input"
           type="file"
           accept="image/*"
           onChange={(e) => setPhoto(e.target.files[0] ?? null)}
         />
         {photo && (
-          <div style={{ fontSize: 12 }}>
+          <div className="formSubtle">
             Selected: {photo.name}
           </div>
         )}
       </div>
 
-      <button type="submit">Save Place</button>
+      <button type="submit" className="primaryBtn">Save Place</button>
     </form>
   );
 }

@@ -207,6 +207,108 @@
   left: 20px;
 }
 
+.MapGalleryBtn {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: none;
+  background: #9b7a73; /* match primary color */
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+/* ensure form controls in the Add Place form get consistent themed styles */
+.addPlaceForm .input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: white;
+  outline: none;
+  color: black;
+  box-sizing: border-box;
+}
+
+.addPlaceForm .textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: white;
+  color: black;
+  resize: vertical;
+}
+
+/* make the form submit button a compact primary button */
+.addPlaceForm .primaryBtn {
+  width: auto;
+  padding: 10px 14px;
+  border-radius: 999px;
+  align-self: flex-start;
+}
+
+/* New grouped toggle buttons for map/gallery */
+.MapGalleryBtns {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  gap: 8px;
+  z-index: 60;
+}
+
+.MapGalleryBtns button {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.96);
+  color: #333;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.MapGalleryBtns button.active {
+  background: #9b7a73;
+  color: white;
+  border-color: rgba(0,0,0,0.06);
+}
+
+/* Slightly warmer background for gallery sidebar to match map theme */
+.GalleryPage {
+  background: #fbf6f4;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.GalleryTitle {
+  color: #2f2f2f;
+}
+
+.GalleryCards {
+  margin-top: 8px;
+}
+
+/* Fix for location search overlap */
+.locationSearchWrap {
+  position: relative;
+  z-index: 80; /* keep suggestions above other elements */
+  margin-bottom: 8px; /* create breathing room before the "no location selected" text */
+}
+
+/* Make inner gallery area match the top background to avoid large white blocks */
+.GalleryBody {
+  background: #fbf6f4;
+  padding: 0;
+  margin: 0 -20px; /* neutralize outer padding so cards align with header */
+}
+
+.emptyState {
+  color: rgba(0,0,0,0.6);
+  padding: 12px 0;
+}
+
 .search {
   width: 30%;
 }
